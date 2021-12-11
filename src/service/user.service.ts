@@ -1,3 +1,4 @@
+import { Response } from "express";
 import { omit } from "lodash";
 import { DocumentDefinition } from "mongoose";
 import User, { UserDocument } from "../models/user.model";
@@ -9,9 +10,10 @@ export async function createUser(
   >
 ): Promise<any> {
   try {
-    return await User.create(input);
+    const user = await User.create(input);
+    return omit(user.toJSON(), "password");
   } catch (e: any) {
-    log.error(e);
+    throw new Error(e);
   }
 }
 

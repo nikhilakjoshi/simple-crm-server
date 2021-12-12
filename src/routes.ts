@@ -1,6 +1,7 @@
 import { Express, Request, Response } from "express";
 import {
   createSessionHandler,
+  deleteUserSessionHandler,
   getUserSessionHandler,
 } from "./controller/session.controller";
 import { createUserHandler } from "./controller/user.controller";
@@ -16,20 +17,23 @@ const routes = (app: Express) => {
 
   //creates a new user
   app.post(
-    "/api/v1/user",
+    "/api/v1/users",
     validateResource(createUserSchema),
     createUserHandler
   );
 
   //creates a new user Session
   app.post(
-    "/api/v1/session",
+    "/api/v1/sessions",
     validateResource(createSessionSchema),
     createSessionHandler
   );
 
   // fetches all user sessions
-  app.get("/api/v1/session", requireUser, getUserSessionHandler);
+  app.get("/api/v1/sessions", requireUser, getUserSessionHandler);
+
+  // logout from (delete a) session
+  app.delete("/api/v1/sessions", requireUser, deleteUserSessionHandler);
 };
 
 export default routes;

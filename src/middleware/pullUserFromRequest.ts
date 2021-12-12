@@ -15,7 +15,7 @@ export default async function pullUserDetails(
     ""
   );
   const refreshToken = get(req, "headers.x-refresh-token", "");
-  if (!!incomingToken) return next();
+  if (!!!incomingToken) return next();
 
   // verify the incoming token
 

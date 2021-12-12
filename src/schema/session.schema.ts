@@ -2,11 +2,11 @@ import { boolean, object, string, TypeOf } from "zod";
 
 export const createSessionSchema = object({
   body: object({
-    userId: string({
-      required_error: "userId is required",
+    email: string({
+      required_error: "email is required",
     }),
-    isSessionValid: boolean({
-      required_error: "isSessionValid is required",
+    password: string({
+      required_error: "password is required",
     }),
   }),
 });

@@ -1,4 +1,4 @@
-import jwt from "jsonwebtoken";
+import jwt, { JwtPayload } from "jsonwebtoken";
 import config from "config";
 
 export function signJwt(
@@ -20,7 +20,11 @@ export function signJwt(
 export function verifyJwt(
   token: string,
   keyName: "accessTokenPublicKey" | "refreshTokenPublicKey"
-) {
+): {
+  valid: boolean;
+  expired: boolean | string;
+  decoded: JwtPayload | string;
+} {
   const publicKey = Buffer.from(config.get<string>(keyName), "base64").toString(
     "ascii"
   );
@@ -35,7 +39,7 @@ export function verifyJwt(
     return {
       valid: false,
       expired: e.message === "jwt expired",
-      decoded: null,
+      decoded: "",
     };
   }
 }

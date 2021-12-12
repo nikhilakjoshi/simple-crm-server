@@ -4,7 +4,7 @@ export const createSessionSchema = object({
   body: object({
     email: string({
       required_error: "email is required",
-    }),
+    }).email("Email is invalid"),
     password: string({
       required_error: "password is required",
     }),

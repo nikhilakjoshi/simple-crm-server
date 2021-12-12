@@ -6,7 +6,6 @@ export default async function requireUser(
   next: NextFunction
 ) {
   const user = resp.locals.user;
-
   if (!user) {
     return resp.sendStatus(403);
   }

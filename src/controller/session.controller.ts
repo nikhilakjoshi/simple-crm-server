@@ -1,6 +1,10 @@
 import { Request, Response } from "express";
 import log from "../utils/logger";
-import { createSession, FetchUserSessions } from "./../service/session.service";
+import {
+  createSession,
+  FetchUserSessions,
+  updateSessionValidity,
+} from "./../service/session.service";
 import { validateUserPassword } from "../service/user.service";
 import { signJwt } from "../utils/jwt.utils";
 import config from "config";
@@ -56,4 +60,17 @@ export async function getUserSessionHandler(req: Request, resp: Response) {
   const sessions = await FetchUserSessions(user._id);
 
   return resp.status(200).send(sessions);
+}
+
+export async function deleteUserSessionHandler(req: Request, resp: Response) {
+  try {
+    const sessionId = resp.locals.user.session;
+    const temp = await updateSessionValidity({
+      sessionId,
+      isValid: false,
+    });
+    return resp.status(200).send({ message: "session deleted" });
+  } catch (e: any) {
+    return resp.status(500).send({ message: "Internal Server Error" });
+  }
 }

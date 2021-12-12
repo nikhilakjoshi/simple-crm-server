@@ -4,6 +4,7 @@ import { signJwt, verifyJwt } from "../utils/jwt.utils";
 import log from "../utils/logger";
 import { findUserById } from "./user.service";
 import config from "config";
+import { string } from "zod";
 
 export async function createSession({
   userId,
@@ -45,4 +46,14 @@ export async function reIssueAccessToken({
   );
 
   return newToken;
+}
+
+export async function updateSessionValidity({
+  sessionId,
+  isValid,
+}: {
+  sessionId: string;
+  isValid: Boolean;
+}) {
+  await sessionModel.updateOne({ _id: sessionId }, { valid: !!isValid });
 }

@@ -38,3 +38,10 @@ export async function validateUserPassword({
     return false;
   }
 }
+
+export async function findUserById({ _id }: { _id: string }): Promise<any> {
+  const user = await User.findById(_id);
+  if (!user) return null;
+
+  return user.toJSON();
+}

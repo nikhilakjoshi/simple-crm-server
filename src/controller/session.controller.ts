@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import log from "../utils/logger";
-import { createSession } from "./../service/session.service";
+import { createSession, FetchUserSessions } from "./../service/session.service";
 import { validateUserPassword } from "../service/user.service";
 import { signJwt } from "../utils/jwt.utils";
 import config from "config";
@@ -47,4 +47,13 @@ export async function createSessionHandler(req: Request, res: Response) {
     log.error(e);
     return res.status(403).send(e.message);
   }
+}
+
+export async function getUserSessionHandler(req: Request, resp: Response) {
+  const user = resp.locals.user;
+  if (!user || !user._id) return resp.status(403);
+
+  const sessions = await FetchUserSessions(user._id);
+
+  return resp.status(200).send(sessions);
 }

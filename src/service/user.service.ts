@@ -32,7 +32,7 @@ export async function validateUserPassword({
 
     if (!isValid) return false;
 
-    return omit(user, "password");
+    return omit(user.toJSON(), "password");
   } catch (e: any) {
     log.error(e);
     return false;

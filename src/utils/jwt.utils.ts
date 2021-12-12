@@ -4,12 +4,15 @@ import config from "config";
 export function signJwt(
   object: Object,
   keyName: "accessTokenPrivateKey" | "refreshTokenPrivateKey",
-  options?: jwt.SignOptions | undefined
+  options: { expiresIn: string }
 ) {
-  const signingKey = Buffer.from(config.get<string>(keyName)).toString("ascii");
-
+  const signingKey = Buffer.from(
+    config.get<string>(keyName),
+    "base64"
+  ).toString("ascii");
+  const { expiresIn } = options;
   return jwt.sign(object, signingKey, {
-    ...(options && options),
+    expiresIn,
     algorithm: "RS256",
   });
 }
@@ -18,7 +21,9 @@ export function verifyJwt(
   token: string,
   keyName: "accessTokenPublicKey" | "refreshTokenPublicKey"
 ) {
-  const publicKey = Buffer.from(config.get<string>(keyName)).toString("ascii");
+  const publicKey = Buffer.from(config.get<string>(keyName), "base64").toString(
+    "ascii"
+  );
   try {
     const decoded = jwt.verify(token, publicKey);
     return {

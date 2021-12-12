@@ -9,7 +9,7 @@ export async function createSession({
 }): Promise<any> {
   try {
     const session = await sessionModel.create({ userId });
-    return session;
+    return session.toJSON();
   } catch (e: any) {
     log.error(e.errors);
   }

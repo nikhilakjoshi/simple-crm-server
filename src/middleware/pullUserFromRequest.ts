@@ -4,16 +4,9 @@ import { verifyJwt } from "../utils/jwt.utils";
 import { reIssueAccessToken } from "../service/session.service";
 
 const bRegEx = /^Bearer\s/;
-export default async function pullUserDetails(
-  req: Request,
-  res: Response,
-  next: NextFunction
-) {
+export default async function pullUserDetails(req: Request, res: Response, next: NextFunction) {
   // extract tokens from auth header
-  const incomingToken = get(req, "headers.authorization", "").replace(
-    bRegEx,
-    ""
-  );
+  const incomingToken = get(req, "headers.authorization", "").replace(bRegEx, "");
   const refreshToken = get(req, "headers.x-refresh-token", "");
   if (!!!incomingToken) return next();
 
@@ -32,10 +25,7 @@ export default async function pullUserDetails(
     }
 
     //verify the new token and set that in locals
-    const { decoded: newDecoded } = verifyJwt(
-      newToken as string,
-      "accessTokenPublicKey"
-    );
+    const { decoded: newDecoded } = verifyJwt(newToken as string, "accessTokenPublicKey");
 
     if (!!newDecoded) {
       res.locals.user = newDecoded;

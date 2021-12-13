@@ -6,11 +6,7 @@ import { findUserById } from "./user.service";
 import config from "config";
 import { string } from "zod";
 
-export async function createSession({
-  userId,
-}: {
-  userId: string;
-}): Promise<any> {
+export async function createSession({ userId }: { userId: string }): Promise<any> {
   try {
     const session = await sessionModel.create({ userId });
     return session.toJSON();
@@ -24,11 +20,7 @@ export async function FetchUserSessions(userId: string): Promise<any> {
   return !sessions || sessions.length === 0 ? false : sessions;
 }
 
-export async function reIssueAccessToken({
-  refreshToken,
-}: {
-  refreshToken: string;
-}): Promise<any> {
+export async function reIssueAccessToken({ refreshToken }: { refreshToken: string }): Promise<any> {
   const { decoded } = verifyJwt(refreshToken, "refreshTokenPublicKey");
   if (!decoded || !get(decoded, "session")) return false;
 
@@ -39,21 +31,13 @@ export async function reIssueAccessToken({
   const user = await findUserById({ _id: session.userId });
   if (!user) return false;
 
-  const newToken = signJwt(
-    { ...user, session: session._id },
-    "accessTokenPrivateKey",
-    { expiresIn: config.get<string>("accessTokenTtl") }
-  );
+  const newToken = signJwt({ ...user, session: session._id }, "accessTokenPrivateKey", {
+    expiresIn: config.get<string>("accessTokenTtl"),
+  });
 
   return newToken;
 }
 
-export async function updateSessionValidity({
-  sessionId,
-  isValid,
-}: {
-  sessionId: string;
-  isValid: Boolean;
-}) {
+export async function updateSessionValidity({ sessionId, isValid }: { sessionId: string; isValid: Boolean }) {
   await sessionModel.updateOne({ _id: sessionId }, { valid: !!isValid });
 }

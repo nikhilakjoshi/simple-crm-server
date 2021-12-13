@@ -1,10 +1,6 @@
 import { Request, Response } from "express";
 import log from "../utils/logger";
-import {
-  createSession,
-  FetchUserSessions,
-  updateSessionValidity,
-} from "./../service/session.service";
+import { createSession, FetchUserSessions, updateSessionValidity } from "./../service/session.service";
 import { validateUserPassword } from "../service/user.service";
 import { signJwt } from "../utils/jwt.utils";
 import config from "config";
@@ -14,8 +10,7 @@ export async function createSessionHandler(req: Request, res: Response) {
     //validate user password
 
     const user = await validateUserPassword(req.body);
-    if (!user)
-      return res.status(401).send({ message: "Invalid email or Password" });
+    if (!user) return res.status(401).send({ message: "Invalid email or Password" });
 
     // create session
 

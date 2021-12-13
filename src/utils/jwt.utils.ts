@@ -6,10 +6,7 @@ export function signJwt(
   keyName: "accessTokenPrivateKey" | "refreshTokenPrivateKey",
   options: { expiresIn: string }
 ) {
-  const signingKey = Buffer.from(
-    config.get<string>(keyName),
-    "base64"
-  ).toString("ascii");
+  const signingKey = Buffer.from(config.get<string>(keyName), "base64").toString("ascii");
   const { expiresIn } = options;
   return jwt.sign(object, signingKey, {
     expiresIn,
@@ -25,9 +22,7 @@ export function verifyJwt(
   expired: boolean | string;
   decoded: JwtPayload | string;
 } {
-  const publicKey = Buffer.from(config.get<string>(keyName), "base64").toString(
-    "ascii"
-  );
+  const publicKey = Buffer.from(config.get<string>(keyName), "base64").toString("ascii");
   try {
     const decoded = jwt.verify(token, publicKey);
     return {
